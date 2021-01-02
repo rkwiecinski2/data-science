@@ -35,3 +35,53 @@ ax = df.plot(title='Water temp', x = 'datetime', y = 'temp')
 df['temp'].plot.box()
 
 df = pd.read_csv('./nobel.csv')
+
+
+%matplotlib inline
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+plt.style.use('fivethirtyeight')
+
+plt.style.available
+
+df = pd.read_csv("./sales.csv", parse_dates=['Date'])
+
+df['Month'] = df['Date'].dt.month
+sales = df.groupby(['Month', 'Product']) ['Amount'].sum().unstack()
+df.head()
+
+styles={'a': ':s', 'b': '--v', 'c': '-.o'}
+
+with plt.style.context('seaborn-colorblind'):
+    fig, ax = plt.subplots(figsize=(10,8))
+    for column in styles:
+        sales[column].dropna().plot(ax=ax, style=styles)
+        
+# fig.suptitle('Sales 2019', fontweight='bold')
+ax.set_ylabel('Sales (Korony)')
+ax.set_title("Monthly sales for products a b and c", fontstyle='italic',fontsize='10')
+ax.grid(True)
+fig.tight_layout()
+
+
+styles={'a': ':s', 'b': '--v', 'c': '-.o'}
+
+
+fig, ax = plt.subplots()
+
+for column in styles:
+        sales[column].dropna().plot(ax=ax, style=styles)
+        
+# fig.suptitle('Sales 2019', fontweight='bold')
+ax.set_ylabel('Sales (Korony)')
+ax.set_title("Monthly sales for products a b and c", fontstyle='italic',fontsize='10')
+ax.grid(True)
+fig.tight_layout()
+
+
+
+
+
+
