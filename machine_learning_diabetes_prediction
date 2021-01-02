@@ -1,0 +1,243 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import os
+
+%matplotlib inline 
+
+df = pd.read_csv("pima-data.csv") 
+
+
+df
+
+df.head()
+
+df.sample(6)
+
+### Definition of features
+From the metadata on the data source we have the following definition of the features.
+| Feature  | Description | Comments |
+|--------------|-------------|--------|
+| num_preg     | number of pregnancies         |
+| glucose_conc | Plasma glucose concentration a 2 hours in an oral glucose tolerance test         |
+| diastolic_bp | Diastolic blood pressure (mm Hg) |
+| thickness | Triceps skin fold thickness (mm) |
+|insulin | 2-Hour serum insulin (mu U/ml) |
+| bmi |  Body mass index (weight in kg/(height in m)^2) |
+| diab_pred |  Diabetes pedigree function |
+| Age (years) | Age (years)|
+| skin | ???? | What is this? |
+| diabetes | Class variable (1=True, 0=False) |  Why is our data boolean (True/False)? |
+
+
+
+df.info
+
+df.isnull().values.any()  # tak sprawdzamy czy sa nulle
+
+def plot_corr(df, size=11):
+    
+    corr=df.corr()
+    fig, ax = plt.subplots(figsize=(size, size))
+    cax = ax.matshow(corr)
+    fig.colorbar(cax)
+    
+    plt.xticks(range(len(corr.columns)), corr.columns)
+    plt.yticks(range(len(corr.columns)), corr.columns)
+    
+    
+
+plot_corr(df)
+
+
+
+df.corr()  # tu nam pokazuje korelacje
+
+del df['skin']
+
+df.head()
+
+def plot_corr(df, size=11):
+    
+    corr=df.corr()
+    fig, ax = plt.subplots(figsize=(size, size))
+    cax = ax.matshow(corr)
+    fig.colorbar(cax)
+    
+    plt.xticks(range(len(corr.columns)), corr.columns)
+    plt.yticks(range(len(corr.columns)), corr.columns)
+
+plot_corr(df)
+
+df.info() 
+
+df.describe()
+
+diabetes_map = {True: 1, False: 0}
+df['diabetes'] = df['diabetes'].map(diabetes_map)
+
+df.head()
+
+df['diabetes'].count()
+
+num_obs = len(df)
+
+num_true = len(df.loc[df['diabetes'] == 1])
+num_false = len(df.loc[df['diabetes'] == 0])
+
+print(f"Number of True cases: {num_true}, ({num_true/num_obs:2.2f}%)")
+print(f"Number of False cases: {num_false}, ({num_false/num_obs:2.2f}%)")
+
+from sklearn.model_selection import train_test_split 
+
+predicted_class_name = ['diabetes']
+feature_col_names = ['num_preg', 'glucose_conc', 'diastolic_bp','thickness'	,'insulin',	'bmi'	,'diab_pred',	'age',	'diabetes' ]
+
+x = df[feature_col_names].values
+y = df[predicted_class_name].values
+
+split_test_size = 0.3 
+
+x_train, x_test, y_train, y_test = train_test_split(x,y,test_size=split_test_size, random_state=42)
+
+print(f"{(len(x_train)/len(df.index)) * 100:0.2f} % in trainig set")
+print(f"{(len(x_test)/len(df.index)) * 100:0.2f} % in test set")
+
+df.head()
+
+print(f'row in dataframe {len(df)}')
+print(f"row missing in glucose_conc {len(df.loc[df [ 'glucose_conc' ] == 0])}")
+
+from sklearn.impute import SimpleImputer 
+
+fill_0 = SimpleImputer(missing_values=0, strategy="mean")
+x_train = fill_0.fit_transform(x_train)
+x_test = fill_0.fit_transform(x_test) 
+# tutaj wyliczamy funkcje transformatora
+
+
+
+from sklearn.naive_bayes import GaussianNB
+
+nb_model = GaussianNB()
+
+nb_model.fit(x_train, y_train.ravel())
+
+nb_predict_train = nb_model.predict(x_train)
+
+nb_predict_train
+
+from sklearn import metrics
+
+print(f"Accuracy: {metrics.accuracy_score(y_train, nb_predict_train):.4f}")
+
+
+nb_predict_test = nb_model.predict(x_test)
+print(f"Accuracy: {metrics.accuracy_score(y_test, nb_predict_test):.4f}")
+
+metrics.confusion_matrix(y_test, nb_predict_test)
+
+print(metrics.classification_report(y_test, nb_predict_test))
+
+
+
+from sklearn.ensemble import RandomForestClassifier
+
+rf_model = RandomForestClassifier(random_state=42, n_estimators=10)
+rf_model.fit(x_train, y_train.ravel())
+
+rf_predict_test = rf_model.predict(x_test)
+
+print(f"Accuracy: {metrics.classification_report(y_test, rf_predict_test):.4f}")
+
+
+
+## Logistic Regresion
+
+from sklearn.linear_model import LogisticRegression
+
+lr_model = LogisticRegression(C=0.7, solver='liblinear' , random_state = 42)
+
+lr_model.fit(x_train, y_train.ravel())
+lr_predict_test = lr_model.predict(x_test)
+
+
+lr_model = LogisticRegression(C=0.7, solver='liblinear', random_state=42)
+lr_model.fit(x_train, y_train.ravel())
+lr_predict_train = lr_model.predict(x_train)
+lr_predict_test = lr_model.predict(x_test)
+
+print(f'Accuracy: {metrics.accuracy_score(y_train, lr_predict_train):.4f}')
+print(metrics.confusion_matrix(y_train, lr_predict_train))
+print(metrics.classification_report(y_train, lr_predict_train))
+
+print(f'Accuracy: {metrics.accuracy_score(y_test, lr_predict_test):.4f}')
+print(metrics.confusion_matrix(y_test, lr_predict_test))
+print(metrics.classification_report(y_test, lr_predict_test))
+
+C_start = 0.1
+C_end = 5
+C_inc = 0.1
+
+C_values, recall_scores = [], []
+C_val = C_start
+best_recall_score = 0
+
+while (C_val< C_end):
+    C_values.append(C_val)
+    
+    lr_model_loop = LogisticRegression(C=C_val, solver='liblinear', random_state=42)
+    lr_model_loop.fit(x_train, y_train.ravel())
+    lr_predict_loop_test = lr_model_loop.predict(x_test)
+    recall_score = metrics.recall_score(y_test, lr_predict_loop_test)
+    recall_scores.append(recall_score)
+    
+    if recall_score > best_recall_score:
+        best_recall_score = recall_score
+        best_ir_predict_test = lr_predict_loop_test
+        
+    C_val += C_inc 
+      
+    
+    
+
+best_score_C_val = C_values[recall_scores.index(best_recall_score)]
+print(f'max val of {best_recall_score:.3f} occured at C={best_score_C_val:.3f}')
+
+g = ['a', 'b', 'c']
+g[g.index('c')]  
+
+plt.plot(C_values, recall_scores, '-')
+plt.xlabel('C val')
+plt.ylabel('recall score')
+
+C_start = 0.1
+C_end = 5
+C_inc = 0.1
+
+C_values, recall_scores = [], []
+C_val = C_start
+best_recall_score = 0
+
+while (C_val< C_end):
+    C_values.append(C_val)
+    
+    lr_model_loop = LogisticRegression(C=C_val,class_weight='balanced', solver='liblinear', random_state=42)
+    lr_model_loop.fit(x_train, y_train.ravel())
+    lr_predict_loop_test = lr_model_loop.predict(x_test)
+    recall_score = metrics.recall_score(y_test, lr_predict_loop_test)
+    recall_scores.append(recall_score)
+    
+    if recall_score > best_recall_score:
+        best_recall_score = recall_score
+        best_ir_predict_test = lr_predict_loop_test
+        
+    C_val += C_inc 
+    
+    
+best_score_C_val = C_values[recall_scores.index(best_recall_score)]
+print(f'max val of {best_recall_score:.3f} occured at C={best_score_C_val:.3f}')
+
+plt.plot(C_values, recall_scores, '-')
+plt.xlabel('C val')
+plt.ylabel('recall score')
+
