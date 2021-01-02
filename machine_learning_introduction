@@ -1,0 +1,113 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+import os
+
+
+
+iris_df = pd.read_csv(os.path.join('data','24,10','datasets','iris.csv'))
+
+iris_df.head()
+
+iris_df.shape
+
+iris_df.info()
+
+iris_df.sample(5)
+
+iris_df.describe()
+
+iris_df['class'].value_counts()
+
+iris_df = iris_df.sample(frac=1).reset_index(drop=True)
+
+iris_df
+
+iris_df.shape
+
+
+
+iris_df[iris_df.isnull().any(axis=1)]
+
+from sklearn import preprocessing
+
+label_encoding = preprocessing.LabelEncoder()
+
+iris_df['class'] = label_encoding.fit_transform(iris_df['class'].astype(str))
+
+iris_df.head()
+
+iris_df.describe()
+
+iris_df.columns
+
+iris_df.rename(columns={'sepal-length  ': 'sepal-length', 'sepal-width  ':'sepal-width' ,'petal-length  ':'petal-length'}, inplace=True)
+
+fig, ax= plt.subplots()
+plt.scatter(iris_df['sepal-length'], iris_df['sepal-width'])
+
+plt.xlabel('sepal-length')
+plt.ylabel('sepal-width')
+
+plt.show()
+
+fig, ax= plt.subplots()
+plt.scatter(iris_df['petal-length'], iris_df['petal-width'])
+
+plt.xlabel('petal-length')
+plt.ylabel('petal-width')
+
+plt.show()
+
+fig, ax= plt.subplots()
+plt.scatter(iris_df['sepal-length'], iris_df['petal-length'])
+
+plt.xlabel('sepal-length')
+plt.ylabel('petal-length')
+
+plt.show()
+
+fig, ax= plt.subplots()
+plt.scatter(iris_df['sepal-width'], iris_df['petal-width'])
+
+plt.xlabel('sepal-width')
+plt.ylabel('petal-width')
+
+plt.show()
+
+fig, ax = plt.subplots(figsize=(20,20))
+plt.scatter(iris_df['sepal-length'], iris_df['sepal-width'])
+plt.scatter(iris_df['petal-length'], iris_df['petal-width'])
+plt.scatter(iris_df['sepal-length'], iris_df['petal-length'])
+plt.scatter(iris_df['sepal-width'], iris_df['petal-width'])
+plt.show()
+
+iris_2D = iris_df[['sepal-length','petal-length']]
+
+iris_2D.shape
+
+iris_2D =np.array(iris_2D)
+
+from sklearn.cluster import KMeans
+
+km_model = KMeans(n_clusters= 3, max_iter=10000).fit(iris_2D)
+
+km_model.labels_
+
+centroids= km_model.cluster_centers_
+
+centroids
+
+fig, ax= plt.subplots(figsize=(12, 8))
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='s', s=250)
+for i in range(len(centroids)):
+    plt.annotate(i, (centroids[i][0], (centroids[i][1])), fontsize=30)
+
+colors = ['coral', 'gold', 'green']
+fig, ax= plt.subplots(figsize=(12,8))
+plt.scatter(iris_df['sepal-length'], iris_df['petal-length'], c=iris_df['class'], cmap=matplotlib.colors.ListedColormap(colors))
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='s')
+for i in range(len(centroids)):
+    plt.annotate(i, (centroids[i][0], (centroids[i][1])), fontsize=20)
+
