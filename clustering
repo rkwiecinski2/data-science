@@ -1,0 +1,97 @@
+import sklearn
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import random 
+
+sklearn.__version__
+
+pd.__version__
+
+np.__version__
+
+data1 = np.array([[random.randint(1, 400) for x in range(2)] for j in range(50) ], np.float64)
+data2 = np.array([[random.randint(300, 700) for x in range(2)] for j in range(50) ], np.float64)
+data3 = np.array([[random.randint(600, 900) for x in range(2)] for j in range(50) ], np.float64)
+
+data = np.append(np.append(data1, data2, axis=0), data3, axis=0)
+
+data.shape
+
+fig, ax= plt.subplots()
+plt.scatter(data[:, 0], data[:, 1], s=50)
+ 
+
+labels1 = np.array([0 for x in range(50)])
+labels2 = np.array([1 for x in range(50)])
+labels3 = np.array([2 for x in range(50)])
+
+labels1
+
+labels = np.append(np.append(labels1, labels2, axis=0), labels3, axis=0)
+
+labels
+
+
+
+df = pd.DataFrame({'data_x': data[:,0], 'data_y': data[:,1], 'labels': labels})
+
+df
+
+df.sample(10)
+
+colors = ['red', 'green', 'blue']
+
+import matplotlib.pyplot as plt
+import matplotlib
+fig, ax= plt.subplots()
+plt.scatter(df['data_x'], df['data_y'], c=df['labels'], cmap=matplotlib.colors.ListedColormap(colors))
+
+from sklearn.cluster import KMeans 
+
+km_model = KMeans(n_clusters= 3, max_iter=10000).fit(data)
+
+km_model.labels_
+
+centroids= km_model.cluster_centers_
+
+centroids
+
+fig, ax= plt.subplots()
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='s')
+for i in range(len(centroids)):
+    plt.annotate(i, (centroids[i][0]+ 7, (centroids[i][1]+ 7)), fontsize=20)
+
+
+
+fig, ax= plt.subplots()
+plt.scatter(df['data_x'], df['data_y'], c=df['labels'], cmap=matplotlib.colors.ListedColormap(colors))
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='s')
+for i in range(len(centroids)):
+    plt.annotate(i, (centroids[i][0]+ 7, (centroids[i][1]+ 7)), fontsize=20)
+
+data_test = np.array([[442., 621.],
+                      [ 50., 153.],
+                      [ 333., 373.],
+                      [835., 816.]])
+
+labels_pred = km_model.predict(data_test)
+
+
+
+labels_pred
+
+fig, ax= plt.subplots()
+
+plt.scatter(df['data_x'], df['data_y'], c=df['labels'], cmap=matplotlib.colors.ListedColormap(colors))
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='^')
+
+for i in range(len(data_test)):
+    plt.annotate(i, (labels_pred[i][0]+ 7, (labels_pred[i][1]+ 7)), fontsize=20)
+plt.scatter(centroids[:, 0],centroids[:, 1], c='r', marker='^')    
+for i in range(len(centroids)):
+    plt.annotate(i, (centroids[i][0]+ 7, (centroids[i][1]+ 7)), fontsize=20)
+
+
+
+
