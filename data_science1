@@ -66,7 +66,7 @@ fig, ax = plt.subplots()
 top.plot.bar(ax=ax, stacked=True, color=['gold', 'silver', 'brown'])
 fig.tight_layout()
 
-- - - - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 
 %matplotlib inline
 import pandas as pd
