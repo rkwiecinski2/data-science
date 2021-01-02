@@ -38,7 +38,7 @@ df_cars_2.head(2)
 
 df_cars_2.tail(2)
 
-df_cars_2.iloc[2:4]   # wybieramy cos ze srodka przedzialu, wazne zeby miec kwadratowe nawiasy
+df_cars_2.iloc[2:4]  
 
 df_cars_2[df_cars_2.Drives_right== True]
 
@@ -46,7 +46,7 @@ df_cars_2[df_cars_2.countries== 'Japan']
 
 df_cars_2[df_cars_2.cars_per_cap == 588]
 
-df_cars_2.loc[["MA","RU"]]     # funkcja location - uwaga na nawiasy
+df_cars_2.loc[["MA","RU"]]     
 
 df_cars_2['Drives_right'].to_frame()
 
