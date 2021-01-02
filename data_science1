@@ -49,7 +49,7 @@ df.head()
 
 g = df.groupby(['month', 'Product'])['Amount'].sum()
 g = g.unstack()
-revenue = g.fillna(0).cumsum()  # tutaj jest suma kumulacyjna (bierzemy poprzednie produkty i kazdy kolejny)
+revenue = g.fillna(0).cumsum()  
 revenue
 
 fig.ax = plt.subplots()
