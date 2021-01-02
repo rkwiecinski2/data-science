@@ -1,0 +1,37 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+df = pd.read_csv("./water.csv")
+
+df.info()  # informacje o pliku
+
+df.head(9)
+
+ax = df.plot()  
+
+ax = df.plot(subplots=True, title="Water measurements of the Duth")
+
+ax = df["temp"].plot(title="water temp")
+
+df['datetime'] = pd.to_datetime(df['datetime'])
+df.info()
+
+ax = df.plot(title='Water temp', x = 'datetime', y = 'temp')
+
+df['temp'].plot.box()
+
+df = pd.read_csv('./nobel.csv')
+
+ax = df.plot(subplots=True, title="Water measurements of the Duth")
+
+ax = df["temp"].plot(title="water temp")
+
+df['datetime'] = pd.to_datetime(df['datetime'])
+df.info()
+
+ax = df.plot(title='Water temp', x = 'datetime', y = 'temp')
+
+df['temp'].plot.box()
+
+df = pd.read_csv('./nobel.csv')
