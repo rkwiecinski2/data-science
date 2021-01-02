@@ -93,7 +93,7 @@ ax = grades.mean().plot(title="Average test score")
 ax = grades.mean(axis=1).plot.bar(title="Aver")
 
 
-ax = grades.mean(axis=1).plot.barh(title="Aver")   #literka h pozwala zmienic wykres na horyzontalny
+ax = grades.mean(axis=1).plot.barh(title="Aver")   
 
 
 
@@ -103,7 +103,7 @@ grades['avg'] = grades.mean(axis=1)
 grades.loc['whole class'] = grades.mean()
 
 
-ax = grades.mean(axis=1).plot.barh(title="All test") tutaj  w porownaniu do sredniej
+ax = grades.mean(axis=1).plot.barh(title="All test") 
 
 grades_t
 
@@ -152,5 +152,55 @@ ax.set_title("Example")
 
 ax.axhline(0, linestyle= '--', color='green', alpha=.25)
 ax.axvline(0, linestyle= '--', color='peru', alpha=.25)
+
+
+
+import pandas as pd
+import os
+
+exam_data = pd.read_csv('data\exams.csv', quotechar='"')
+
+exam_data
+
+exam_data.mean()
+
+math_average = exam_data['math score'].mean()
+writing_average = exam_data['writing score'].mean()
+reading_average = exam_data['reading score'].mean()
+
+print((f"math avg: {math_average}"))
+print((f"writing: {writing_average}"))
+print((f"mreading avg: {reading_average}"))
+
+from sklearn import preprocessing
+
+exam_data[['math score']] = preprocessing.scale(exam_data[['math score']])
+exam_data[['reading score']] = preprocessing.scale(exam_data[['reading score']])
+exam_data[['writing score']] = preprocessing.scale(exam_data[['writing score']])
+
+exam_data.head()
+
+exam_data.mean()
+
+# label encoder : 
+le = preprocessing.LabelEncoder()
+exam_data['gender'] = le.fit_transform(exam_data['gender']).astype(str)
+
+exam_data.head()
+
+le.classes_
+
+pd.get_dummies(exam_data['race/ethnicity'])
+
+exam_data = pd.get_dummies(exam_data, columns=['race/ethnicity'])
+
+exam_data
+
+exam_data = pd.get_dummies(exam_data, columns=['parental level of education', 'lunch', 'test preparation course'])
+
+exam_data.head()
+
+exam_data.shape
+
 
 
