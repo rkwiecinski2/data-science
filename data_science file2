@@ -1,0 +1,141 @@
+import pandas as pd
+
+
+pd.__version__
+
+countries = ['United States', 'Australia', 'Japan', 'India', 'Russia', 'Morocco', 'Egypt']
+dr = [True, False, False, False, True, True, True]
+cpc = [809, 731, 588, 18, 200, 70, 45]
+
+cars_dict = {"countries": countries, "Drives_right": dr, "cars_per_cap": cpc}
+
+cars_dict
+
+df_cars = pd.DataFrame(cars_dict)
+df_cars
+
+row_labels = ['US', 'AUS','JAP','IND', 'RU', 'MA','EG']
+
+df_cars.index = row_labels
+df_cars
+
+df_cars.to_csv('cars.csv', sep=';', encoding='UTF-8')
+
+df_cars_2 = pd.read_csv('cars.csv', sep=';', index_col=0)
+df_cars_2
+
+df_cars_2['countries']
+
+type(df_cars_2['countries'])
+
+df_cars_2.shape
+
+pd.DataFrame(df_cars_2['countries'])
+
+df_cars_2[['cars_per_cap', 'countries']]
+
+df_cars_2.head(2)
+
+df_cars_2.tail(2)
+
+df_cars_2.iloc[2:4]   # wybieramy cos ze srodka przedzialu, wazne zeby miec kwadratowe nawiasy
+
+df_cars_2[df_cars_2.Drives_right== True]
+
+df_cars_2[df_cars_2.countries== 'Japan']
+
+df_cars_2[df_cars_2.cars_per_cap == 588]
+
+df_cars_2.loc[["MA","RU"]]     # funkcja location - uwaga na nawiasy
+
+df_cars_2['Drives_right'].to_frame()
+
+cols = ["Temp F", "Dew point F", "Pressure atm"]
+cols2 = ["Temp C", "Dew point C", "Pressure atm"]
+
+import io
+
+pd_data = pd.read_csv(io.StringIO(data), sep='\s+', index_col=0, names=cols)
+
+pd_data
+
+import matplotlib.pyplot as plt
+
+import matplotlib as m
+
+m.__version__
+
+pd_data["Temp C"] = (pd_data["Temp F"] -32) * (5/9)
+pd_data["Dew point C"] = (pd_data["Dew point F"] -32) * (5/9)
+
+plt.plot(pd_data["Temp C"])
+plt.plot(pd_data["Dew point C"])
+plt.plot(pd_data["Pressure atm"], color='lightcoral')
+
+plt.title('Temperature in Radom', color='peru')
+plt.xlabel("hours")
+plt.ylabel("cos innego")
+plt.legend(cols2)
+plt.show()
+
+pd_data.to_json('data.json')
+
+from pprint import pprint as pp
+
+pd_data.plot(subplots=True)
+
+pd_data[["Temp C", "Pressure atm"]].plot(subplots=True)
+
+stack = """Month        AAPL        GOOG         IBM
+0    Jan  117.160004  534.522445  153.309998
+1    Feb  128.460007  558.402511  161.940002
+2    Mar  124.430000  548.002468  160.500000
+3    Apr  125.150002  537.340027  171.289993
+4    May  130.279999  532.109985  169.649994
+5    Jun  125.430000  520.510010  162.660004
+6    Jul  121.300003  625.609985  161.990005
+7    Aug  112.760002  618.250000  147.889999
+8    Sep  110.300003  608.419983  144.970001
+9    Oct  119.500000  710.809998  140.080002
+10   Nov  118.300003  742.599976  139.419998
+11   Dec  105.260002  758.880005  137.619995"""
+
+df_stack = pd.read_csv(io.StringIO(stack), sep="\s+")
+df_stack
+
+df_stack.plot(x="Month", y=["AAPL", "IBM"])
+plt.title("Monthly pirces")
+plt.ylabel("Price $US")
+
+
+
+
+df_cars = pd.read_csv(io.StringIO(cars_from_data), sep="\s+")
+df_cars_names = pd.read_csv(io.StringIO(cars_from_data_names), sep="\n\s+", engine="python")
+df_cars_names = df_cars_names["name"].map(lambda x: " ".join(x.split()[1:]))
+
+df_cars = pd.read_csv(io.StringIO(cars_from_data), sep="\s+")
+df_cars
+
+df_cars.plot(kind="scatter", x="hp", y="mpg")
+
+df_cars.plot(kind="scatter", x="weight", y="mpg")
+
+
+df_bills = pd.read_csv(io.StringIO(bills), sep="\s+")
+df_bills
+
+df_bills["tip"].plot(kind="hist", bins=30)
+
+df_bills["total_bill"].plot(kind="hist", bins=30)
+
+df_cars.plot(kind="scatter", x="hp", y="mpg")
+
+df_cars.plot(kind="scatter", x="weight", y="mpg")
+
+df_bills = pd.read_csv(io.StringIO(bills), sep="\s+")
+df_bills
+
+df_bills["tip"].plot(kind="hist", bins=30)
+
+df_bills["total_bill"].plot(kind="hist", bins=30)
