@@ -5,7 +5,6 @@ import matplotlib
 import os
 
 
-
 iris_df = pd.read_csv(os.path.join('data','24,10','datasets','iris.csv'))
 
 iris_df.head()
