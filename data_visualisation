@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 df = pd.read_csv("./water.csv")
 
-df.info()  # informacje o pliku
+df.info()  
 
 df.head(9)
 
