@@ -32,7 +32,7 @@ From the metadata on the data source we have the following definition of the fea
 
 df.info
 
-df.isnull().values.any()  # tak sprawdzamy czy sa nulle
+df.isnull().values.any()  
 
 def plot_corr(df, size=11):
     
