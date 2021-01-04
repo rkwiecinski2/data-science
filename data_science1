@@ -8,7 +8,6 @@ df = pd.read_csv('./athletes.csv', parse_dates=['date_of_birth'])
 
 df.head()
 
-
 f = df[df['sex'] == 'female']
 
 m = df[df['sex'] == 'male']
