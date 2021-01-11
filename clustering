@@ -33,7 +33,6 @@ labels = np.append(np.append(labels1, labels2, axis=0), labels3, axis=0)
 labels
 
 
-
 df = pd.DataFrame({'data_x': data[:,0], 'data_y': data[:,1], 'labels': labels})
 
 df
